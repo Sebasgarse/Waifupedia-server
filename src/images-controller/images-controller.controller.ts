@@ -1,15 +1,28 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete } from '@nestjs/common';
 import { ImagesControllerService } from './images-controller.service';
-import { CreateImagesControllerDto } from './dto/create-images-controller.dto';
-import { UpdateImagesControllerDto } from './dto/update-images-controller.dto';
 
-@Controller('images-controller')
+interface picture {
+  title: string;
+  url: string;
+  size_x: number;
+  size_y: number;
+}
+
+@Controller('images')
 export class ImagesControllerController {
-  constructor(private readonly imagesControllerService: ImagesControllerService) {}
+  constructor(
+    private readonly imagesControllerService: ImagesControllerService,
+  ) {}
 
   @Post()
-  create(@Body() createImagesControllerDto: CreateImagesControllerDto) {
-    return this.imagesControllerService.create(createImagesControllerDto);
+  async create(@Body() pictures: Array<picture>) {
+    const urls = [];
+    for (const picture of pictures) {
+      urls.push(this.imagesControllerService.create(picture));
+    }
+
+    const ids = await Promise.all(urls);
+    return ids;
   }
 
   @Get()
@@ -22,10 +35,13 @@ export class ImagesControllerController {
     return this.imagesControllerService.findOne(+id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateImagesControllerDto: UpdateImagesControllerDto) {
-    return this.imagesControllerService.update(+id, updateImagesControllerDto);
-  }
+  // @Patch(':id')
+  // update(
+  //   @Param('id') id: string,
+  //   @Body() updateImagesControllerDto: UpdateImagesControllerDto,
+  // ) {
+  //   return this.imagesControllerService.update(+id, updateImagesControllerDto);
+  // }
 
   @Delete(':id')
   remove(@Param('id') id: string) {

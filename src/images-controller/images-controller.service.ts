@@ -1,26 +1,49 @@
 import { Injectable } from '@nestjs/common';
-import { CreateImagesControllerDto } from './dto/create-images-controller.dto';
-import { UpdateImagesControllerDto } from './dto/update-images-controller.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Picture } from './entities/picture.entity';
 
 @Injectable()
 export class ImagesControllerService {
-  create(createImagesControllerDto: CreateImagesControllerDto) {
-    return 'This action adds a new imagesController';
+  constructor(
+    @InjectRepository(Picture)
+    private picturesRepository: Repository<Picture>,
+  ) {}
+
+  async create({ size_x, size_y, title, url }): Promise<number> {
+    const picture = new Picture();
+    picture.size_x = size_x;
+    picture.size_y = size_y;
+    picture.title = title;
+    picture.url = url;
+    await this.picturesRepository.save(picture);
+    return picture.id;
   }
 
-  findAll() {
-    return `This action returns all imagesController`;
+  findAll(): Promise<Picture[]> {
+    return this.picturesRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} imagesController`;
+  findOne(id: number): Promise<Picture> {
+    return this.picturesRepository.findOneBy({ id });
   }
 
-  update(id: number, updateImagesControllerDto: UpdateImagesControllerDto) {
-    return `This action updates a #${id} imagesController`;
-  }
+  // async update(id: number, picture) {
+  //   const picture_ = await this.picturesRepository.findOneBy({
+  //     id: picture.id
+  //   });
+  //   picture_.
+  //   return `This action updates a #${id} imagesController`;
+  // }
 
-  remove(id: number) {
-    return `This action removes a #${id} imagesController`;
+  async remove(id: number) {
+    try {
+      const picture = await this.picturesRepository.findOneBy({ id });
+      await this.picturesRepository.remove(picture);
+      return `Removed succesfully`;
+    } catch (error) {
+      console.error(error);
+      return 'Error: ' + error;
+    }
   }
 }
