@@ -1,12 +1,6 @@
 import { Controller, Get, Post, Body, Param, Delete } from '@nestjs/common';
+import { Picture } from './entities/picture.entity';
 import { ImagesControllerService } from './images-controller.service';
-
-interface picture {
-  title: string;
-  url: string;
-  size_x: number;
-  size_y: number;
-}
 
 @Controller('images')
 export class ImagesControllerController {
@@ -15,7 +9,7 @@ export class ImagesControllerController {
   ) {}
 
   @Post()
-  async create(@Body() pictures: Array<picture>) {
+  async create(@Body() pictures: Picture[]) {
     const urls = [];
     for (const picture of pictures) {
       urls.push(this.imagesControllerService.create(picture));
