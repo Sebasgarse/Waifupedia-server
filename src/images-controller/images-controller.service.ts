@@ -10,14 +10,14 @@ export class ImagesControllerService {
     private picturesRepository: Repository<Picture>,
   ) {}
 
-  async create({ size_x, size_y, title, url }): Promise<number> {
+  async create({ size_x, size_y, title, url }): Promise<Picture> {
     const picture = new Picture();
     picture.size_x = size_x;
     picture.size_y = size_y;
     picture.title = title;
     picture.url = url;
     await this.picturesRepository.save(picture);
-    return picture.id;
+    return picture;
   }
 
   findAll(): Promise<Picture[]> {
@@ -25,6 +25,12 @@ export class ImagesControllerService {
   }
 
   findOne(id: number): Promise<Picture> {
+    return this.picturesRepository.findOneBy({ id });
+  }
+
+  async findRandom(): Promise<Picture> {
+    const pictures = await this.picturesRepository.find();
+    const id = Math.floor(Math.random() * pictures.length + 1);
     return this.picturesRepository.findOneBy({ id });
   }
 

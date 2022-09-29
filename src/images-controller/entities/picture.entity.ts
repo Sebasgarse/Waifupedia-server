@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import { PictureTag } from './picture-tag.entity';
 
 @Entity()
 export class Picture {
@@ -25,4 +26,7 @@ export class Picture {
 
   @Column({ default: true })
   isActive: boolean;
+
+  @OneToMany(() => PictureTag, (PictureTag) => PictureTag.picture)
+  tags: PictureTag[];
 }

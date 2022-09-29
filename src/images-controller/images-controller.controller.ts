@@ -15,13 +15,18 @@ export class ImagesControllerController {
       urls.push(this.imagesControllerService.create(picture));
     }
 
-    const ids = await Promise.all(urls);
-    return ids;
+    const data = await Promise.all(urls);
+    return data;
   }
 
   @Get()
   findAll() {
     return this.imagesControllerService.findAll();
+  }
+
+  @Get('rand')
+  rand() {
+    return this.imagesControllerService.findRandom();
   }
 
   @Get(':id')
