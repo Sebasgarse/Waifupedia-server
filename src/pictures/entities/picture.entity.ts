@@ -27,6 +27,8 @@ export class Picture {
   @Column({ default: true })
   isActive: boolean;
 
-  @OneToMany(() => PictureTag, (PictureTag) => PictureTag.picture)
+  @OneToMany(() => PictureTag, (PictureTag) => PictureTag.picture, {
+    eager: true,
+  })
   tags: PictureTag[];
 }

@@ -1,4 +1,4 @@
-export interface Picture {
+export class CreatePictureDto {
   title: string;
   url: string;
   size_x: number;
