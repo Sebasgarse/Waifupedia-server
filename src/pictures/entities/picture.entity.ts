@@ -1,5 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
-import { PictureTag } from './picture-tag.entity';
+import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class Picture {
@@ -27,8 +26,6 @@ export class Picture {
   @Column({ default: true })
   isActive: boolean;
 
-  @OneToMany(() => PictureTag, (PictureTag) => PictureTag.picture, {
-    eager: true,
-  })
-  tags: PictureTag[];
+  @Column('varchar', { length: 1000, default: '' })
+  tags: string;
 }

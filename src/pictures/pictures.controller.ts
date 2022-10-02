@@ -36,6 +36,11 @@ export class PicturesController {
     return this.picturesService.findRandom();
   }
 
+  @Post('rand')
+  randTag(@Body() { tag }) {
+    return this.picturesService.findRandom(tag);
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.picturesService.findOne(+id);
